@@ -151,24 +151,25 @@
 
 			<br><br><br>
 
+	<h1>Thng Details</h1>
+
 	<?
 
 	if($thng_id=$_GET["thng_id"]) { // If a thng_id has been specified using the parameter "thng_id", then get & display the data of the thng
 		$results = getThng($thng_id);
 		$thng=json_decode($results);		
 		?>
-		<h1>Thng View</h1>
 		
 		<table class="table table-striped table-bordered table-condensed">
 			<tbody>
 
 				<tr>
-					<th>Thng JSON Document</th>
+					<th>Full JSON</th>
 					<td><? echo $results; ?></td>
 				</tr>
 
 				<tr>
-					<th>Thng ID number</th>
+					<th>Thng ID</th>
 					<td><? echo $thng_id; ?></td>
 				</tr>
 
@@ -184,15 +185,15 @@
 					<th>Created At</th>
 					<td><?
 					// Time stamps in the engine are stored in milliseconds, so need to convert into seconds to get epochs
-					echo date('r', $thng->{'createdAt'}/1000)." (".$thng->{'createdAt'}.")"; 
+					echo date('r', $thng->{'createdAt'}/1000)." (UNIX Timestamp: ".$thng->{'createdAt'}.")"; 
 					?></td>
 				</tr>
 				<tr>
-					<th>Last Updated At</th>
-					<td><? echo date('r', $thng->{'updatedAt'}/1000)." (".$thng->{'updatedAt'}.")"; ?></td>
+					<th>Updated At</th>
+					<td><? echo date('r', $thng->{'updatedAt'}/1000)." (UNIX Timestamp: ".$thng->{'updatedAt'}.")"; ?></td>
 				</tr>
 				<tr>
-					<th>ProductID</th>
+					<th>Product ID</th>
 					<td><? 
 					if ($thng->{'product'}){ // some thngs don't have a product
 						$product_id=$thng->{'product'};
@@ -201,8 +202,8 @@
 					?></td>
 				</tr>
 				<tr>
-					<th>tags</th>
-					<td><? echo $thng->{'tags'}; ?></td>
+					<th>Tags</th>
+					<td><? echo "[\"".implode('","', $thng->{'tags'})."\"]"; ?></td>
 				</tr>
 				<tr>
 					<th>Last Seen: </th>
@@ -226,10 +227,11 @@
 				</tr>
 
 				<tr>
-					<th>Properties </th>
+					<th>Properties</th>
 					<td> 
 						<table class="table table-bordered">
-							<?
+						
+						<?
 						// now we get all the properties of that thng
 						$results = getThngProperties($thng_id);
 						$thng_props=json_decode($results);
@@ -241,7 +243,7 @@
 						?>							
 					</table> 
 					
-					<h4>Property view</h4> 
+					<h4>Property Browser</h4> 
 					
 					<p>
 					 <label for="unittype">Select unit type:</label>
@@ -272,9 +274,7 @@
 			
 		
 		
-		<? 
-		
-		
+		<? 				
 //		$property="distance";
 //		$results = getPropertyPlotData($thng_id,$property);
 //			$rawData=json_decode($results);
@@ -491,7 +491,7 @@
 	</div>
 
 	
-	<h2>Order Location</h2>
+	<h2>Thng Location</h2>
 
 	<div id="map" class="smallmap"></div>
 
@@ -499,7 +499,7 @@
 	       <input type="submit" onclick="plotLocations(); return false;" value="Plot all locations on map" onsubmit="plotLocations(); return false;">
 	</form>
 
-	<h3>List of Locations</h3>
+	<h3>All Locations</h3>
 	<table class="table table-striped table-bordered table-condensed">
 		<tbody>
 			<?
@@ -510,7 +510,8 @@
 		?>
 		
 		<script>
-			// Create a js object of all the locations that is used by plotLocations() for putting them on the map			
+			// Create a js object of all the locations that is used by plotLocations() for putting them on the map
+			// Unlike other requests we're using JS to parse the locations (so the data is available in JS and can be plotted, etc.)			
 			var locations = JSON.parse('<?php echo $results; ?>');
 		</script>
 
@@ -528,9 +529,16 @@
 
 
 	<? 
+}  else  { // if no thng_id as param ?>
+	
+	<div>The thng you select does not belong to a product.</div>
+
+<? 
 } // End of the if(thng_id)
 ?>
 
+
+<h1>Product Details</h1>
 
 <?
 if ($_GET["product_id"]){  // If a product_id variable is given, then display that product	
@@ -543,11 +551,10 @@ if ($product_id){ // get product info
 	$product=json_decode($results);		
 	?>
 
-	<h1>Product View</h1>
 	<table class="table table-striped table-bordered table-condensed">
 		<tbody>
 			<tr>
-				<th>Product JSON</th>
+				<th>Full JSON</th>
 				<td><? echo $results; ?></td>
 			</tr>
 			<tr>
@@ -569,16 +576,20 @@ if ($product_id){ // get product info
 				?></td>
 			</tr>
 			<tr>
-				<th>Last Updated At</th>
+				<th>Updated At</th>
 				<td><? echo date('r', $product->{'updatedAt'}/1000)." (".$product->{'updatedAt'}.")"; ?></td>
 			</tr>
 			<tr>
+				<th>Categories</th>
+				<td><? echo "[\"".implode('","', $product->{'categories'})."\"]"; ?></td>
+			</tr>
+			<tr>
 				<th>Tags</th>
-				<td><? echo $product->{'tags'}; ?></td>
+				<td><?  echo "[\"".implode('","', $product->{'tags'})."\"]"; ?></td>
 			</tr>
 			<tr>
 				<th>Photos</th>
-				<td><? echo $product->{'photos'}; ?></td>
+				<td><? echo "[\"".implode('","', $product->{'photos'})."\"]"; ?></td>
 			</tr>
 
 			<tr>
