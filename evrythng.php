@@ -95,7 +95,6 @@ function sendRequest($url,$verb="GET",$data=NULL) {
 	curl_setopt($ch, CURLOPT_URL,$apiUrl.$url);
   	curl_setopt($ch, CURLOPT_USERAGENT, "PHP Wrapper v0.21");
 
-
 	// Set the verb
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);
 
@@ -135,11 +134,7 @@ function sendRequest($url,$verb="GET",$data=NULL) {
     	echo 'Request Error:' . curl_error($ch);
 	}
 
-
-
 	DEBUG ? debug_to_console("RX <-- payload (".$verb." ".$url.") ".$result) : null;
-
-
 	
 	// Close the connection
 	curl_close($ch);
@@ -173,35 +168,35 @@ function createThng($data) {
 # GET /thngs/[thngId] - returns an individual thng
 function getThng($thngId) {
 	$url = '/thngs/'.$thngId;
-	$result =  sendRequest($url); 	
+	$result = sendRequest($url); 	
 	return $result;
 }
 
 # PUT /thngs/[thngId] - updates an individual thngs
 function updateThng($thngId,$data) {
 	$url = '/thngs/'.$thngId;
-	$result =  sendRequest($url,"PUT",$data); 	
+	$result = sendRequest($url,"PUT",$data); 	
 	return $result;
 }
 
 # DELETE /thngs/[thngId]
 function deleteThng($thngId) {
 	$url = '/thngs/'.$thngId;
-	$result =  sendRequest($url,"DELETE"); 	
+	$result = sendRequest($url,"DELETE"); 	
 	return $result;
 }
 
 # GET /thngs/[thngId]/properties
 function getThngProperties($thngId) {
 	$url = '/thngs/'.$thngId.'/properties';
-	$result =  sendRequest($url); 	
+	$result = sendRequest($url); 	
 	return $result;
 }
 
 # GET /thngs/[thngId]/properties
 function getThngProperty($thngId,$property) {
 	$url = '/thngs/'.$thngId.'/properties/'.$property;
-	$result =  sendRequest($url); 	
+	$result = sendRequest($url); 	
 	return $result;
 }
 
@@ -222,7 +217,6 @@ function deleteThngProperty($thngId,$property) {
 # GET /thngs/[thngId]/location
 function getThngLocations($thngId) {
 	$url = '/thngs/'.$thngId.'/location';
-
 	$result = sendRequest($url); 	
 	return $result;
 }
@@ -238,10 +232,31 @@ function getProducts() {
 	return $result;
 }
 
+# POST /products/ - creates a new product
+function createProduct($data) {
+	$url = '/products';
+	$result = sendRequest($url,"POST",$data);
+	return $result;
+}
+
 # GET /products/[productId] - retieves an individual product
 function getProduct($productId) {
 	$url = '/products/'.$productId;
 	$result = sendRequest($url);
+	return $result;
+}
+
+# PUT /products/[productId] - updates an existing product
+function updateProduct($productId,$data) {
+	$url = '/products/'.$productId;
+	$result = sendRequest($url,"PUT",$data);
+	return $result;
+}
+
+# DELETE /products/[productId] - retieves an individual product
+function deleteProduct($productId) {
+	$url = '/products/'.$productId;
+	$result = sendRequest($url,"DELETE");
 	return $result;
 }
 
@@ -254,34 +269,49 @@ function getProdProperties($thngId) {
 
 
 #######
-	## PRODUCTS
+	## REDIRECTIONS
 #######
 
+# POST /thngs/[thngId]/redirector -- Creates a redirection for a thng
+function createRedirection($thngId,$data) {
+	$url = '/thngs/'.$thngId.'/redirector';
+	$result = sendRequest($url,"POST",$data); 	
+	return $result;
+}
 
-# GET /thngs/[thngId]/redirector
+
+# GET /thngs/[thngId]/redirector  --  Reads the redirection of a thng (if any)
 function getRedirection($thngId) {
 	$url = '/thngs/'.$thngId.'/redirector';
 	$result = sendRequest($url); 	
 	return $result;
 }
 
-# POST /thngs/[thngId]/redirector
-function createRedirection($thngId,$data) {
+# PUT /thngs/[thngId]/redirector  --  Updates the redirection of a thng
+function updateRedirection($thngId,$data) {
 	$url = '/thngs/'.$thngId.'/redirector';
-
-	$result = sendRequest($url,"POST",$data); 	
+	$result = sendRequest($url,"PUT",$data); 	
 	return $result;
 }
 
-
-# DELETE /thngs/[thngId]/redirector
+# DELETE /thngs/[thngId]/redirector  -- Deletes the redirection of a thng
 function deleteRedirection($thngId) {
 	$url = '/thngs/'.$thngId.'/redirector';
-
 	$result = sendRequest($url,"DELETE"); 	
 	return $result;
 }
 
+
+#######
+	## LOCATIONS
+#######
+
+# GET /thngs/[thngId]/location
+function getLocations($thngId) {
+	$url = '/thngs/'.$thngId.'/location';
+	$result = sendRequest($url); 	
+	return $result;
+}
 
 # PUT /thngs/[thngId]/location
 function updateLocation($thngId,$data) {
@@ -335,14 +365,14 @@ function updateCollection($collId,$data) {
 # DELETE /collections/{id}
 function deleteCollection($collId) {
 	$url = '/collections/'.$collId;
-	$result =  sendRequest($url,"DELETE"); 	
+	$result = sendRequest($url,"DELETE"); 	
 	return $result;
 }
 
 # GET /collections/ID/thngs
 function getCollectionThngs($collId) {
 	$url = '/collections/'.$collId.'/thngs';
-	$result =  sendRequest($url); 	
+	$result = sendRequest($url); 	
 	return $result;
 }
 
@@ -410,7 +440,6 @@ function validateEvtUser($userId,$data) {
 }
 
 
-
 # POST /auth/evrythng/users   --- Create a new application
 # loginDocument={"email":"XXX","password":"YYY"}
 function loginEvtUser($data) {
@@ -460,7 +489,7 @@ function getAllUsers($appId=NULL) {
 	## ACTIONS
 #######
 
-# GET /actions
+# GET /actions  -- Reads the list of all action types
 function getActionTypes() {
 	$url = '/actions';
 	$result = sendRequest($url); 	
@@ -468,7 +497,7 @@ function getActionTypes() {
 }
 
 
-# POST /actions
+# POST /actions -- Creates a new action Type
 function createActionType($data) {
 	$url = '/actions';
 	$result = sendRequest($url,"POST",$data); 	
@@ -476,15 +505,15 @@ function createActionType($data) {
 }
 
 
-# GET /actions/{type}
+# GET /actions/{type} -- Get all actions of a given type
 function getActions($actionType) {
 	$url = '/actions/'.$actionType;
-	$result =  sendRequest($url); 	
+	$result = sendRequest($url); 	
 	return $result;
 }
 
 
-# POST /actions/{type}
+# POST /actions/{type}  -- Creates a new action 
 function createAction($actionType,$data) {
 	$url = '/actions/'.$actionType;
 	$result = sendRequest($url,"POST",$data); 	
@@ -493,7 +522,7 @@ function createAction($actionType,$data) {
 
 
 #######
-	## Helpers
+	## HELPERS
 #######
 
 function debug_to_console($data) {

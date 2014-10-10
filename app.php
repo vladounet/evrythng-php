@@ -155,7 +155,7 @@
 				$action["location"]["position"]=array('type' => 'Point', 'coordinates' => array("10","-11"));
 				$action["locationSource"] = "sensor";
 
-				// If you want to acc custom fields:
+				// If you want to add some custom fields to this action
 				//$action["customFields"]["boom"]="YESS";
 				//$action["customFields"]["trying?"]="NOPES";
 				
