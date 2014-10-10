@@ -4,13 +4,13 @@ evrythng-php
 A very basic PHP wrapper for the evrythng.com API. Comes with a few sample applications. 
 
 
-# Prerequisites
+## Prerequisites
 
-## Your system
-You need a Web server with PHP 5 enabled. Also make sure you install cURL & json modules in PHP (php5-curl & php5-json).  
+### Your Web system
+You need a Web server with PHP 5 enabled. Also make sure you install cURL and json modules in PHP (*php5-curl* & *php5-json*). Simply add this project to your base Web server URL, and you should be able to open *http://localhost/evrythng-php*.  
 
-## 
-You need to add a *config.php* file in your basic folder which must contain your account API Key. You can initialize it with the following content. 
+### Configuration file
+You need to add a *config.php* file in your basic folder which contains your account API Key (*evrythng.php* references it). You can initialize it with the following content: 
 
 ```
 <?
