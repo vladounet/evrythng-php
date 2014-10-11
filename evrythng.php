@@ -85,13 +85,20 @@ function setContext($key) {
 
 
 // This simply executes a request to the EVRYTHNG Endpoint
-function sendRequest($url,$verb='GET',$data=NULL) {
+function sendRequest($url,$verb='GET',$data=NULL,$appId=NULL) {
 	global $apiUrl,$apiKey;
 	
 	// Initializing cURL
 	$ch = curl_init();
 
 	// Setting curl options
+
+	if ($appId==NULL) {
+		curl_setopt($ch, CURLOPT_URL,$apiUrl.$url);
+	} else {
+		curl_setopt($ch, CURLOPT_URL,$apiUrl.$url."?app=".$appId);
+	}
+
 	curl_setopt($ch, CURLOPT_URL,$apiUrl.$url);
   	curl_setopt($ch, CURLOPT_USERAGENT, "PHP Wrapper v0.25");
 
@@ -474,12 +481,7 @@ function getUser($userId) {
 
 # GET /users/ -- reads all users in a given app (or all apps)
 function getAllUsers($appId=NULL) {
-	if ($appId==NULL) {
-		$url = '/users/';
-	} else {
-		$url = '/users/?app='.$appId;
-	}
-	
+	$url = '/users';	
 	$result = sendRequest($url); 	
 	return $result;
 }
